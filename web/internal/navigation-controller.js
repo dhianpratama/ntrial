@@ -1,6 +1,7 @@
 angular.module('Jiggie-Test').controller('NavigationCtrl'
     ,function ($rootScope, $scope, $timeout, $location, $q, SessionService, AuthenticationService, ModuleGroupService) {
 
+        console.log("WASU");
             $rootScope.waitInitialized(function () {
                 $scope.moduleGroups = [];
                 var jsonMg = ModuleGroupService.GetAllModuleGroups();
@@ -15,6 +16,7 @@ angular.module('Jiggie-Test').controller('NavigationCtrl'
 
                 var user = SessionService.get();
                 $scope.user = user;
+                console.log("USER ON NSV", $scope.user);
 
                 $scope.navigatePage = function (route) {
                     if (route != null && route != "")

@@ -39,7 +39,7 @@ router.post('/GetAll', function (req, res) {
 });
 
 router.post('/GetAllExceptMe', function (req, res) {
-    if(req.user) {
+    if (req.user) {
         var query = {
             'username': {
                 $ne: req.user.username
@@ -54,7 +54,12 @@ router.post('/GetAllExceptMe', function (req, res) {
 });
 
 router.post('/GetCurrentUser', function (req, res) {
-    res.json(jsonWithContext(req.user));
+    User.findOne({'id': req.user.id}, function (err, data) {
+        if (err)
+            throw err;
+
+        res.json(jsonWithContext(data));
+    })
 });
 
 

@@ -3,13 +3,17 @@
  */
 
 var FacebookStrategy = require('passport-facebook').Strategy;
-var LocalStrategy= require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
 // load up the user model
 var User = require('../models/user-model');
 
 // load the auth variables
 var configAuth = require('../config/auth-config');
+var config = require('../config/social-feed-config');
+
+var FacebookTokenStrategy = require('passport-facebook-token');
+var cookieParser = require('cookie-parser');
 
 module.exports = function (passport) {
 
@@ -19,14 +23,11 @@ module.exports = function (passport) {
     });
 
     // used to deserialize the user
-    passport.deserializeUser(function (id, done) {
-        User.findOne({'id': id.id}, function (err, user) {
+    passport.deserializeUser(function (user, done) {
+        User.findOne({'id': user.id}, function (err, user) {
             done(err, user);
         });
     });
-
-    // code for login (use('local-login', new LocalStategy))
-    // code for signup (use('local-signup', new LocalStategy))
 
     passport.use('local-signup', new LocalStrategy({
             usernameField: 'username',
@@ -38,11 +39,13 @@ module.exports = function (passport) {
                 var query = {
                     'username': username
                 };
+
                 User.findOne(query, function (err, user) {
                     if (err) {
                         req.errorInfo = err;
                         return done(err);
                     }
+
                     if (user) {
                         req.user = false;
                         return done(null, false);
@@ -93,7 +96,7 @@ module.exports = function (passport) {
                     user.isOnline = true;
                     user.lastLoginTime = new Date();
                     user.save(function (err, data) {
-                        if(!err) {
+                        if (!err) {
                             req.user = data;
                             return done(null, data);
                         }
@@ -108,9 +111,9 @@ module.exports = function (passport) {
     passport.use(new FacebookStrategy({
 
             // pull in our app id and secret from our auth.js file
-            clientID: configAuth.facebookAuth.clientID,
-            clientSecret: configAuth.facebookAuth.clientSecret,
-            callbackURL: configAuth.facebookAuth.callbackURL
+            clientID: configAuth.facebook.clientID,
+            clientSecret: configAuth.facebook.clientSecret,
+            callbackURL: configAuth.facebook.callbackURL
         },
 
         // facebook will send back the token and profile
@@ -127,8 +130,7 @@ module.exports = function (passport) {
                     if (err)
                         return done(err);
 
-                    var userModel = new User();
-
+                    var userModel = user != null ? user : new User();
                     // set all of the facebook information in our user model
                     userModel.id = profile.id; // set the users facebook id
                     userModel.displayName = profile.displayName;
@@ -136,19 +138,15 @@ module.exports = function (passport) {
                     userModel.firstName = profile.name.givenName;
                     userModel.lastName = profile.name.familyName;
                     userModel.source = profile.provider;
-
-                    if (user) {
-                        userModel.isNew = false;
-                    } else {
-                        userModel.isNew = true;
-                    }
-                    // save our user to the database
-                    userModel.save(function (err) {
+                    userModel.photo = 'http://graph.facebook.com/' + profile.id + '/picture';
+                    userModel.isOnline = true;
+                    userModel.username = userModel.displayName != null
+                        ? userModel.displayName.split(' ')[0]
+                        : "";
+                    userModel.save(function (err, data) {
                         if (err)
                             throw err;
-
-                        // if successful, return the new user
-                        return done(null, userModel);
+                        return done(null, data);
                     });
 
                 });

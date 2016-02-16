@@ -1,0 +1,20 @@
+<link href="/web/components/css/timeline/default.css" type="text/css" rel="stylesheet">
+<link href="/web/components/css/timeline/component.css" type="text/css" rel="stylesheet">
+
+<div ng-controller="TimelineCtrl">
+    <button class="btn btn-primary" ng-click="getTimeline()"></button>
+    <div class="main">
+        <ul class="cbp_tmtimeline">
+            <li ng-repeat="feed in feeds">
+                <time class="cbp_tmtime"><span>{{ displayDate(feed.created_time) }}</span> <span>{{ displayTime(feed.created_time) }}</span>
+                </time>
+                <div class="cbp_tmicon cbp_tmicon-phone"></div>
+                <div class="cbp_tmlabel">
+                    <h2>{{ feed.story }}</h2>
+
+                    <p>{{ feed.message }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

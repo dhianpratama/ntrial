@@ -3,7 +3,10 @@
  */
 var socketio = require('socket.io');
 var ChatRoom = require('../models/chat-room-model');
-var Chat = require('../business-logic/chat');
+var Chat = require('./chat');
+var User = require('../models/user-model');
+var Timeline = require('./timeline');
+var Enumerable = require('linq');
 
 var joinRooms = function (socket, user) {
     if (!user) return;
@@ -21,8 +24,10 @@ var joinRooms = function (socket, user) {
     });
 }
 
-module.exports.listen = function(app){
+module.exports.listen = function (app) {
     var io = socketio.listen(app);
+
+    var userSocketHash = {};
 
     var users = io.of('/')
     users.on('connection', function (socket) {
@@ -31,6 +36,7 @@ module.exports.listen = function(app){
         // join rooms if there are any existing rooms
         socket.on('initialize', function (user) {
             joinRooms(socket, user);
+            userSocketHash[user.id] = socket.id;
         });
 
         socket.on('join chat', function (chatRoom) {
@@ -51,6 +57,9 @@ module.exports.listen = function(app){
                 newChatRoom.lastUpdateTime = new Date();
                 newChatRoom.save(function (err, data) {
                     socket.join(data._id);
+                    var socketId = userSocketHash[messageModel.targetUser.id];
+                    var otherSocket = io.sockets.connected[socketId];
+                    otherSocket.join(data._id);
                     //socket.broadcast.to(data._id).emit('message', data);
                     io.sockets.in(data._id).emit('message', data);
                 });
@@ -83,6 +92,13 @@ module.exports.listen = function(app){
             io.sockets.in(room).emit('left chat', msg);
         });
 
+        socket.on('refreshFeed', function (user) {
+            var timeline = new Timeline(user);
+            timeline.getFeeds(function (feeds) {
+                socket.emit('feedUpdated', feeds);
+            });
+        });
+
         socket.on('disconnect', function () {
             var rooms = socket.adapter.rooms;
             for (var room in rooms) {
@@ -91,10 +107,22 @@ module.exports.listen = function(app){
                 }
             }
 
-            //rooms.forEach(function(room, i){
-            //    socket.leave(room);
-            //});
-            console.log('user disconnected');
+            var userIds = [];
+            for (var userId in userSocketHash) {
+                if (userSocketHash[userId] == socket.id)
+                    userIds.push(userId);
+            }
+
+            var query = {
+                id: {$in: userIds}
+            }
+            User.find(query, function (err, users) {
+                users.forEach(function (user, i) {
+                    user.isOnline = false;
+                    user.save();
+                })
+            })
+
         });
     })
 

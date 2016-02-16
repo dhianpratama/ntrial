@@ -7,6 +7,7 @@ angular.module('Jiggie-Test').config(function($routeProvider) {
 
     $routeProvider.when('/user',{templateUrl: APP_URL + 'master/user/user.html'});
     $routeProvider.when('/chat',{templateUrl: APP_URL + 'chat/chat.html'});
+    $routeProvider.when('/timeline',{templateUrl: APP_URL + 'timeline/timeline.html'});
     /* Add New Routes Above */
     $routeProvider.otherwise({redirectTo:'/home'});
 

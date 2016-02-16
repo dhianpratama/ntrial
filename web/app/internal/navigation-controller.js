@@ -17,6 +17,13 @@ angular.module('Jiggie-Test').controller('NavigationCtrl'
                     route: '/chat'
                 }];
 
+            if($scope.user.source!='local'){
+                $scope.menus.push({
+                    label: 'Timeline',
+                    route: '/timeline'
+                })
+            }
+
             $scope.navigatePage = function (route) {
                 if (route != null && route != "")
                     $location.path(route);

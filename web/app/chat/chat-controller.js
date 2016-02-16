@@ -21,14 +21,12 @@ angular.module('Jiggie-Test').controller('ChatCtrl', function ($rootScope, $scop
                 targetUser: targetUser
             }, function () {
                 $scope.chatRoom = json.data;
-                callback();
-                //goToBottom();
+
             });
         };
         $scope.onUserClick = function (user) {
             $scope.targetUser = user;
-            getChatHistories(user, function () {
-            });
+            getChatHistories(user);
         };
 
         $scope.model = {

@@ -57,7 +57,8 @@
 <script src="/web/app/internal/navigation-controller.js"></script>
 <script src="/web/app/master/user/user.js"></script>
 <script src="/web/app/master/user/user-form/user-form-controller.js"></script>
-<script src="/web/app/chat/chat.js"></script>
+<script src="/web/app/chat/chat-controller.js"></script>
+<script src="/web/app/timeline/timeline-controller.js"></script>
 <script src="/web/directive/metis/metis.js"></script>
 <script src="/web/directive/scrollToLast/scroll-to-last.js"></script>
 <script src="/web/directive/scrollBottom/scroll-bottom.js"></script>
@@ -69,7 +70,7 @@
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="/web/img/profile_small.jpg"/>
+                            <img alt="image" class="img-circle" ng-src="{{ user.photo }}"/>
                              </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"><span class="block m-t-xs">

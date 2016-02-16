@@ -7,10 +7,9 @@ var database = require('./config/database'); 			// load the database config
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-var cookieParser = require('cookie-parser');
+
 var expressSession = require('express-session');
 var http = require('http').Server(app);
-//var io = require('socket.io')(http);
 var io = require('./business-logic/socket').listen(http)
 var passport = require('passport');
 
