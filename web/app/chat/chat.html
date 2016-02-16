@@ -1,0 +1,113 @@
+<link href="/web/components/css/chat-widget.css" type="text/css" rel="stylesheet">
+<link href="/web/components/css/codepen-reset.css" type="text/css" rel="stylesheet">
+<div class="container clearfix" ng-controller="ChatCtrl">
+    <div class="people-list" id="people-list">
+        <div class="search">
+            <input type="text" placeholder="search"/>
+            <i class="fa fa-search"></i>
+        </div>
+        <ul class="list">
+            <li class="clearfix" ng-repeat="user in users" ng-click="onUserClick(user)" style="cursor: pointer;">
+                <img src="/web/img/profile_small.jpg" alt="avatar"/>
+
+                <div class="about">
+                    <div class="name">{{ user.username }}</div>
+                    <div class="status">
+                        <span ng-if="user.isOnline"><i class="fa fa-circle online"></i> online</span>
+                        <span ng-if="!user.isOnline"><i class="fa fa-circle offline"></i> offline</span>
+                    </div>
+                </div>
+            </li>
+
+
+        </ul>
+    </div>
+
+    <div class="chat" ng-if="targetUser">
+        <div class="chat-header clearfix">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar"/>
+
+            <div class="chat-about">
+                <div class="chat-with">Chat with {{ targetUser.username }}</div>
+                <div class="chat-num-messages">already 1 902 messages</div>
+            </div>
+            <i class="fa fa-star"></i>
+        </div>
+        <!-- end chat-header -->
+
+        <div class="chat-history" scroll-bottom="chatRoom.messages">
+            <ul>
+                <li class="clearfix" ng-repeat="msg in buildModel(chatRoom.messages)" id="post-{{ $index }}">
+                    <div ng-if="msg.isMe">
+                        <div class="message-data align-right">
+                            <span class="message-data-time">{{ displayDate(msg.timestamp) }}</span>
+                            <span class="message-data-name">Me</span> <i
+                                class="fa fa-circle me"></i>
+
+                        </div>
+                        <div class="message my-message float-right">
+                            {{msg.message}}
+                        </div>
+                    </div>
+                    <div ng-if="!msg.isMe">
+                        <div class="message-data">
+                            <span class="message-data-time" >{{ displayDate(msg.timestamp) }}</span>
+                            <span class="message-data-name" >{{ msg.user.username }}</span> <i class="fa fa-circle me"></i>
+
+                        </div>
+                        <div class="message other-message">
+                            {{msg.message}}
+                        </div>
+                    </div>
+
+                </li>
+
+
+            </ul>
+
+        </div>
+        <!-- end chat-history -->
+
+        <div class="chat-message clearfix">
+            <form>
+
+            </form>
+            <textarea name="message-to-send" id="message-to-send" ng-model="model.message"
+                      placeholder="Type your message" rows="3" ng-keypress="onKeyPress($event);"></textarea>
+
+            <i class="fa fa-file-o"></i>
+            <i class="fa fa-file-image-o"></i>
+
+            <button ng-click="onSendMessage()">Send</button>
+
+        </div>
+        <!-- end chat-message -->
+
+    </div>
+    <!-- end chat -->
+
+</div> <!-- end container -->
+
+<script id="message-template" type="text/x-handlebars-template">
+    <li class="clearfix">
+        <div class="message-data align-right">
+            <span class="message-data-time">{{time}}, Today</span> &nbsp; &nbsp;
+            <span class="message-data-name">Olia</span> <i class="fa fa-circle me"></i>
+        </div>
+        <div class="message other-message float-right">
+            {{messageOutput}}
+        </div>
+    </li>
+</script>
+
+<script id="message-response-template" type="text/x-handlebars-template">
+    <li>
+        <div class="message-data">
+            <span class="message-data-name"><i class="fa fa-circle online"></i> Vincent</span>
+            <span class="message-data-time">{{time}}, Today</span>
+        </div>
+        <div class="message my-message">
+            {{response}}
+        </div>
+    </li>
+</script>

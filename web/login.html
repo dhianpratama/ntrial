@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="Jiggie-Test">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jiggie | Login</title>
+
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="components/css/animate.css" rel="stylesheet">
+    <link href="components/css/style.css" rel="stylesheet">
+
+    <!-- JS from Bower Components -->
+    <!-- Mainly scripts -->
+    <script src="bower_components/less.js/dist/less-1.6.2.js" data-concat="false"></script>
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+    <script src="bower_components/toastr/toastr.js"></script>
+    <script src="bower_components/jquery.gritter/js/jquery.gritter.js"></script>
+    <script src="bower_components/metisMenu/dist/metisMenu.js"></script>
+    <script src="bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <script src="bower_components/PACE/pace.js"></script>
+
+    <script src="app-login.js"></script>
+    <script src="factory/factory.js"></script>
+    <script src="factory/factory-internal.js"></script>
+
+</head>
+
+<body class="gray-bg" ng-controller="LoginCtrl">
+
+    <div class="middle-box text-center loginscreen animated fadeInDown" style="width: auto;">
+        <div>
+            <div>
+                <h2 class="logo-name">JIGGIE</h2>
+            </div>
+            <h3>Welcome to Jiggie</h3>
+            <p>Login in. To see it in action.</p>
+            <form class="m-t" role="form">
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="user.username" placeholder="Username" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" ng-model="user.password" placeholder="Password" required="">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b" ng-click="onLogin()">Login</button>
+                <p class="text-muted text-center"><small>Or login using</small></p>
+                <button class="btn btn-primary" ng-click="onLoginFacebook()"><span class="fa fa-facebook"></span> Facebook</button>
+
+                <p class="text-muted text-center" style="padding-top: 10px;"><small>Do not have an account?</small></p>
+                <button class="btn btn-sm btn-white btn-block" ng-click="onCreateNew()">Create an account</button>
+            </form>
+            <p class="m-t"> <small>&copy; 2016</small> </p>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

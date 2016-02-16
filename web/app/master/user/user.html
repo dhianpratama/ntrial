@@ -1,0 +1,29 @@
+<div class="col-md-12" ng-controller="UserCtrl">
+    <h1>User</h1>
+    <hr/>
+    <span class="btn btn-primary "ng-click="Fetch()">
+        <i class="fa fa-refresh" style="float: left;"></i>
+    </span>
+    <span class="btn btn-primary" ng-click="onCreateNew()">
+        <i class="fa fa-user-plus" style="float: left;"></i>Add New
+    </span>
+    <table class="table table-striped table-bordered table-hover dataTables-example">
+        <thead>
+        <tr>
+            <th style="width: 10%"></th>
+            <th>Display Name</th>
+            <th>Source</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="user in users">
+            <td>
+                <i class="fa fa-edit" ng-click="onRowEdit(user)"></i>
+                <i class="fa fa-trash-o" ng-click="onRowDelete(user)"></i>
+            </td>
+            <td>{{ user.displayName }}</td>
+            <td>{{ user.source }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
