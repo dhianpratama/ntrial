@@ -1,0 +1,35 @@
+<link href="/web/components/css/timeline-twitter.css" type="text/css" rel="stylesheet">
+
+<div ng-controller="TimelineCtrl">
+    <span class="first">
+        @{{ user.username }}
+    </span>
+    <ul class="timeline">
+        <li ng-repeat="feed in feeds">
+            <div class="avatar">
+                <img ng-src="{{ feed.user.profile_image_url }}" />
+
+                <div class="hover">
+                    <div class="icon-twitter"></div>
+                </div>
+            </div>
+            <div class="bubble-container">
+                <div class="bubble">
+                    <div class="retweet">
+                        <div class="icon-retweet"></div>
+                    </div>
+                    <h3>@{{feed.user.screen_name}} </h3> - {{ feed.user.name }}
+                    <div>{{ feed.text }}</div>
+                    <div class="over-bubble">
+                        <div class="icon-mail-reply action"></div>
+                        <div class="icon-retweet action"></div>
+                        <div class="icon-star"></div>
+                    </div>
+                </div>
+
+                <div class="arrow"></div>
+            </div>
+        </li>
+    </ul>
+
+</div>

@@ -1,14 +1,23 @@
-angular.module('Jiggie-Test').controller('ChatCtrl', function ($rootScope, $scope, $modal, $timeout, SessionService, UserService, ChatRoomService) {
+angular.module('Jiggie-Test').controller('ChatCtrl', function ($rootScope, $scope, $modal, $timeout, SessionService, UserService, ChatRoomService, SocketService) {
 
     $rootScope.waitInitialized(function () {
         console.log("CHAT CONTROLLER");
+        //SocketService.initialize();
 
         var user = SessionService.get();
+
+        $scope.onUserClick = function (user) {
+            $scope.targetUser = user;
+            getChatHistories(user);
+        };
 
         $scope.users = [];
         $scope.getUsers = function () {
             var json = UserService.GetAllExceptMe(function () {
                 $scope.users = json.data;
+                if($scope.users!=null && $scope.users.length>0){
+                    $scope.onUserClick($scope.users[0]);
+                }
             });
         };
         $scope.getUsers();
@@ -23,10 +32,6 @@ angular.module('Jiggie-Test').controller('ChatCtrl', function ($rootScope, $scop
                 $scope.chatRoom = json.data;
 
             });
-        };
-        $scope.onUserClick = function (user) {
-            $scope.targetUser = user;
-            getChatHistories(user);
         };
 
         $scope.model = {
@@ -49,32 +54,29 @@ angular.module('Jiggie-Test').controller('ChatCtrl', function ($rootScope, $scop
         socket.on('message', function (chatRoom) {
             $scope.chatRoom = chatRoom;
             $scope.$apply();
-            //goToBottom();
+        });
+
+        socket.on('user online', function(user){
+           angular.forEach($scope.users, function(u, i){
+               if(u.id == user.id){
+                   u.isOnline = true;
+               }
+           });
+            $scope.$apply();
+        });
+
+        socket.on('user offline', function(user){
+            angular.forEach($scope.users, function(u, i){
+                if(u.id == user.id){
+                    u.isOnline = false;
+                }
+            });
+            $scope.$apply();
         });
 
         $scope.displayDate = function(date){
             return moment(date).calendar();
         };
-
-        var goToBottom =  function(){
-            console.log("go to bottom");
-            var id='';
-            if($scope.chatRoom.messages!=null && $scope.chatRoom.messages.length>0) {
-                id = '#post-' + ($scope.chatRoom.messages.length - 1)
-                //jQuery(window).scrollTop(jQuery(id).offset().top);
-            }
-
-            var wait = function () {
-                try{
-                    jQuery(window).scrollTop(jQuery(id).offset().top);
-                } catch(err){
-                    $timeout(function () {
-                        wait();
-                    }, 100);
-                }
-            };
-            wait();
-        }
 
         $scope.buildModel = function(messages){
             var newListMessage = [];

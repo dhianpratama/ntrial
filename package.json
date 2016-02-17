@@ -19,6 +19,7 @@
     "passport-facebook": "^2.1.0",
     "passport-facebook-token": "^3.2.0",
     "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
     "social-feed": "^0.1.24",
     "socket.io": "^1.4.5"
   }

@@ -17,10 +17,11 @@ angular.module('Jiggie-Test').controller('NavigationCtrl'
                     route: '/chat'
                 }];
 
+            var timeline = $scope.user.source=='facebook' ? '/timeline' : '/timeline-twitter';
             if($scope.user.source!='local'){
                 $scope.menus.push({
                     label: 'Timeline',
-                    route: '/timeline'
+                    route: timeline
                 })
             }
 

@@ -10,13 +10,14 @@ var OAuth2 = require('oauth').OAuth2,
 module.exports = function (config) {
     obj = {}
 
-    var getTwitterFeeds = function () {
-        var oauth2 = new OAuth2(config.twitter.clientId, config.twitter.clientSecret, 'https://api.twitter.com/', null, 'oauth2/token', null);
+    var getTwitterFeeds = function (cb) {
+        var feeds = {};
+        var oauth2 = new OAuth2(config.clientId, config.clientSecret, 'https://api.twitter.com/', null, 'oauth2/token', null);
         var twitterRequestOptions;
         oauth2.getOAuthAccessToken('', {'grant_type': 'client_credentials'}, function (e, access_token) {
             twitterRequestOptions = {
                 hostname: 'api.twitter.com',
-                path: config.twitter.path,
+                path: config.path,
                 headers: {
                     Authorization: 'Bearer ' + access_token
                 }
@@ -29,19 +30,17 @@ module.exports = function (config) {
                 });
                 result.on('end', function () {
                     try {
-                        feeds.twitter = JSON.parse(buffer);
-                        return feeds.twitter;
+                        feeds.data = JSON.parse(buffer);
                     } catch (err) {
-                        feeds.twitter = err;
-                        return [];
+                        feeds = err;
                     }
+                    cb(feeds);
                 });
             });
         });
-
     }
 
-    var facebookFeeds = function (cb) {
+    var getFacebookFeeds = function (cb) {
         var facebook = new Facebook({
             appID: config.appId,
             secret: config.secret
@@ -52,10 +51,12 @@ module.exports = function (config) {
     }
 
     obj.getFeeds = function (cb) {
-        var feeds = {}
         switch (config.type){
             case "facebook":
-                facebookFeeds(cb)
+                getFacebookFeeds(cb)
+                break;
+            case "twitter":
+                getTwitterFeeds(cb)
                 break;
         }
     }

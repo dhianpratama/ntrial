@@ -3,7 +3,8 @@ toastr.options = {
     closeButton: true,
     progressBar: false,
     showMethod: 'slideDown',
-    timeOut: 3000
+    timeOut: 2000,
+    positionClass: 'toast-top-center',
 };
 
 angular.module('Jiggie-Test', ['ui.bootstrap', 'ui.utils', 'ngRoute', 'ngAnimate', 'ngResource']);
@@ -75,11 +76,17 @@ angular.module('Jiggie-Test')
                         });
                     }
                 }
+            },function(err){
+                if(err.status==401)
+                    toastr.error('Invalid username / password');
             });
         };
 
         $scope.onLoginFacebook = function () {
             window.location = '/api/auth/facebook';
+        };
+        $scope.onLoginTwitter = function () {
+            window.location = '/api/auth/twitter';
         };
 
         var openModal = function () {
@@ -119,4 +126,8 @@ angular.module('Jiggie-Test')
                 }
             });
         };
+
+        $scope.onCancel = function(){
+            $modalInstance.close();
+        }
     });

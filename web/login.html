@@ -10,6 +10,7 @@
 
     <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/web/bower_components/toastr/toastr.css" type="text/css" rel="stylesheet">
 
     <link href="components/css/animate.css" rel="stylesheet">
     <link href="components/css/style.css" rel="stylesheet">
@@ -40,34 +41,50 @@
 </head>
 
 <body class="gray-bg" ng-controller="LoginCtrl">
+<script>
+    [ng - click],
+    [data - ng - click],
+    [x - ng - click]
+    {
+        cursor: pointer;
+    }
+</script>
 
-    <div class="middle-box text-center loginscreen animated fadeInDown" style="width: auto;">
+<div class="middle-box text-center loginscreen animated fadeInDown" style="width: auto;">
+    <div>
         <div>
-            <div>
-                <h2 class="logo-name">JIGGIE</h2>
-            </div>
-            <h3>Welcome to Jiggie</h3>
-            <p>Login in. To see it in action.</p>
-            <form class="m-t" role="form">
-                <div class="form-group">
-                    <input type="text" class="form-control" ng-model="user.username" placeholder="Username" required="">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" ng-model="user.password" placeholder="Password" required="">
-                </div>
-                <button type="submit" class="btn btn-primary block full-width m-b" ng-click="onLogin()">Login</button>
-                <p class="text-muted text-center"><small>Or login using</small></p>
-                <button class="btn btn-primary" ng-click="onLoginFacebook()"><span class="fa fa-facebook"></span> Facebook</button>
-
-                <p class="text-muted text-center" style="padding-top: 10px;"><small>Do not have an account?</small></p>
-                <button class="btn btn-sm btn-white btn-block" ng-click="onCreateNew()">Create an account</button>
-            </form>
-            <p class="m-t"> <small>&copy; 2016</small> </p>
+            <img src="/web/img/jiggie-logo.png"/>
         </div>
+        <h3>Turn up your social life</h3>
+
+        <p>Login in. To see it in action.</p>
+
+        <form class="m-t" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="user.username" placeholder="Username" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" ng-model="user.password" placeholder="Password" required="">
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b" ng-click="onLogin()">Login</button>
+            <p class="text-muted text-center">
+                <small>Or login using</small>
+            </p>
+            <!--<button class="btn btn-primary" ng-click="onLoginFacebook()"><span class="fa fa-facebook"></span> Facebook</button>-->
+
+            <img src="/web/img/facebook.png" ng-click="onLoginFacebook()" style="cursor: pointer;"/>
+            <img src="/web/img/twitter.png" ng-click="onLoginTwitter()" style="cursor: pointer;"/>
+
+            <p class="text-muted text-center" style="padding-top: 10px;">
+                <small>Do not have an account?</small>
+            </p>
+            <button class="btn btn-sm btn-white btn-block" ng-click="onCreateNew()">Create an account</button>
+        </form>
+        <p class="m-t">
+            <small>&copy; 2016</small>
+        </p>
     </div>
-
-
-
+</div>
 </body>
 
 </html>

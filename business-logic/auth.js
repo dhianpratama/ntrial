@@ -24,13 +24,22 @@ module.exports = function (passport) {
         res.json(jsonWithContext(true))
     });
 
-    router.get('/facebook', passport.authenticate('facebook', {scope: 'email'}));
+    router.get('/facebook', passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages'] }));
 
-// handle the callback after facebook has authenticated the user
-    router.get('/facebook/callback',passport.authenticate('facebook', {
+    // handle the callback after facebook has authenticated the user
+    router.get('/facebook/callback', passport.authenticate('facebook', {
         successRedirect: '/',
         failureRedirect: '/'
     }));
+
+    router.get('/twitter', passport.authenticate('twitter'));
+
+    // handle the callback after twitter has authenticated the user
+    router.get('/twitter/callback',
+        passport.authenticate('twitter', {
+            successRedirect: '/',
+            failureRedirect: '/'
+        }));
 
     router.post('/signup', passport.authenticate('local-signup'), function (req, res) {
         if (req.errorInfo)
@@ -39,7 +48,7 @@ module.exports = function (passport) {
         res.json(jsonWithContext(operationInfo.success(req.user)));
     });
 
-    router.post('/login', passport.authenticate('local-login'), function(req, res){
+    router.post('/login', passport.authenticate('local-login'), function (req, res) {
         if (req.errorInfo)
             res.json(jsonWithContext(operationInfo.fail(req.errorInfo)));
 

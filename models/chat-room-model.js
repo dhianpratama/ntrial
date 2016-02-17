@@ -9,7 +9,8 @@ module.exports = mongoose.model('Chat', {
     messages: [{
         user: Schema.Types.Mixed,
         timestamp: Date,
-        message: String
+        message: String,
+        readBy: []
     }],
     lastUpdateTime: Date
 });

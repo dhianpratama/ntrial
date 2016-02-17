@@ -31,10 +31,11 @@ module.exports.listen = function (app) {
 
     var users = io.of('/')
     users.on('connection', function (socket) {
-        console.log('ab user connected');
+        console.log('user connected');
 
         // join rooms if there are any existing rooms
         socket.on('initialize', function (user) {
+            socket.broadcast.emit('user online', user);
             joinRooms(socket, user);
             userSocketHash[user.id] = socket.id;
         });
@@ -59,7 +60,8 @@ module.exports.listen = function (app) {
                     socket.join(data._id);
                     var socketId = userSocketHash[messageModel.targetUser.id];
                     var otherSocket = io.sockets.connected[socketId];
-                    otherSocket.join(data._id);
+                    if (typeof otherSocket != 'undefined' && otherSocket != null)
+                        otherSocket.join(data._id);
                     //socket.broadcast.to(data._id).emit('message', data);
                     io.sockets.in(data._id).emit('message', data);
                 });
@@ -93,6 +95,7 @@ module.exports.listen = function (app) {
         });
 
         socket.on('refreshFeed', function (user) {
+            if (typeof user === 'undefined' || user == null) return;
             var timeline = new Timeline(user);
             timeline.getFeeds(function (feeds) {
                 socket.emit('feedUpdated', feeds);
@@ -100,6 +103,7 @@ module.exports.listen = function (app) {
         });
 
         socket.on('disconnect', function () {
+            console.log('user disconnect');
             var rooms = socket.adapter.rooms;
             for (var room in rooms) {
                 if (rooms.hasOwnProperty(room)) {
@@ -120,8 +124,10 @@ module.exports.listen = function (app) {
                 users.forEach(function (user, i) {
                     user.isOnline = false;
                     user.save();
+                    socket.broadcast.emit('user offline', user);
                 })
-            })
+            });
+
 
         });
     })

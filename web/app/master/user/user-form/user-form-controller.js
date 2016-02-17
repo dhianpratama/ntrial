@@ -3,10 +3,7 @@
 
             $scope.user = userData;
             if ($scope.user == null) {
-                $scope.user = {
-                    displayName: null,
-                    source: null
-                };
+                $scope.user = {};
             }
             $scope.onSave = function () {
                 var json = UserService.Save({

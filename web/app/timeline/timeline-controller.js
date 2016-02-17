@@ -2,6 +2,7 @@ angular.module('Jiggie-Test').controller('TimelineCtrl', function ($rootScope, $
 
     $rootScope.waitInitialized(function () {
         var user = SessionService.get();
+        $scope.user = user;
         $scope.feeds = [];
 
         $scope.refresh = function () {
@@ -11,10 +12,11 @@ angular.module('Jiggie-Test').controller('TimelineCtrl', function ($rootScope, $
         socket.on('feedUpdated', function (feeds) {
             $scope.feeds = feeds.data;
             $scope.$apply();
+            console.log("FEEDS ", $scope.feeds);
         });
 
         $scope.getTimeline = function(){
-            refresh();
+            $scope.refresh();
         };
 
         $scope.displayDate = function(date){

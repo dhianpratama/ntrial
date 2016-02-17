@@ -4,16 +4,13 @@
 
 var FacebookStrategy = require('passport-facebook').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 // load up the user model
 var User = require('../models/user-model');
-
-// load the auth variables
 var configAuth = require('../config/auth-config');
 var config = require('../config/social-feed-config');
 
-var FacebookTokenStrategy = require('passport-facebook-token');
-var cookieParser = require('cookie-parser');
 
 module.exports = function (passport) {
 
@@ -54,6 +51,7 @@ module.exports = function (passport) {
                         newUser.username = username;
                         newUser.password = newUser.generateHash(password);
                         newUser.displayName = req.body.displayName;
+                        newUser.photo = '/web/img/default-avatar.jpeg'
                         newUser.id = username;
 
                         newUser.save(function (err) {
@@ -105,15 +103,14 @@ module.exports = function (passport) {
             })
     );
 
-// =========================================================================
-// FACEBOOK ================================================================
-// =========================================================================
+
     passport.use(new FacebookStrategy({
 
             // pull in our app id and secret from our auth.js file
             clientID: configAuth.facebook.clientID,
             clientSecret: configAuth.facebook.clientSecret,
-            callbackURL: configAuth.facebook.callbackURL
+            callbackURL: configAuth.facebook.callbackURL,
+            profileFields: configAuth.facebook.profileFields
         },
 
         // facebook will send back the token and profile
@@ -135,14 +132,15 @@ module.exports = function (passport) {
                     userModel.id = profile.id; // set the users facebook id
                     userModel.displayName = profile.displayName;
                     userModel.token = token; // we will save the token that facebook provides to the user
-                    userModel.firstName = profile.name.givenName;
-                    userModel.lastName = profile.name.familyName;
+                    userModel.firstName = profile._json.first_name;
+                    userModel.lastName = profile._json.last_name;
                     userModel.source = profile.provider;
-                    userModel.photo = 'http://graph.facebook.com/' + profile.id + '/picture';
+                    userModel.photo = profile.photos[0].value;
+                    userModel.gender = profile.gender;
+                    userModel.bio = profile._json.bio;
+                    userModel.location = profile._json.location.name;
                     userModel.isOnline = true;
-                    userModel.username = userModel.displayName != null
-                        ? userModel.displayName.split(' ')[0]
-                        : "";
+                    userModel.username = !profile.username ? userModel.firstName : profile.username;
                     userModel.save(function (err, data) {
                         if (err)
                             throw err;
@@ -151,7 +149,42 @@ module.exports = function (passport) {
 
                 });
             });
+        }));
 
+    passport.use(new TwitterStrategy({
+            consumerKey: configAuth.twitter.consumerKey,
+            consumerSecret: configAuth.twitter.consumerSecret,
+            callbackURL: configAuth.twitter.callbackURL
+
+        },
+        function (token, tokenSecret, profile, done) {
+
+            // make the code asynchronous
+            // User.findOne won't fire until we have all our data back from Twitter
+            process.nextTick(function () {
+
+                User.findOne({'id': profile.id}, function (err, user) {
+
+                    // if there is an error, stop everything and return that
+                    // ie an error connecting to the database
+                    if (err)
+                        return done(err);
+
+                    var userModel = user != null ? user : new User();
+                    userModel.id = profile.id;
+                    userModel.displayName = profile.displayName;
+                    userModel.token = token;
+                    userModel.source = profile.provider;
+                    userModel.photo = profile.photos[0].value;
+                    userModel.isOnline = true;
+                    userModel.username = profile.username
+                    userModel.save(function (err, data) {
+                        if (err)
+                            throw err;
+                        return done(null, data);
+                    });
+                });
+            });
         }));
 
 }
