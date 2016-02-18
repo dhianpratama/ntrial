@@ -9,7 +9,6 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 // load up the user model
 var User = require('../models/user-model');
 var configAuth = require('../config/auth-config');
-var config = require('../config/social-feed-config');
 
 
 module.exports = function (passport) {

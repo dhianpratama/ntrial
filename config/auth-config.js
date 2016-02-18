@@ -13,7 +13,7 @@ module.exports = {
     'twitter' : {
         'consumerKey'       : '8LyElI7kykBI1OmYvl5mrvNU2',
         'consumerSecret'    : 'zbumaD6rOCtYtXqXjQLrXOvX4JeEijn9hKsq20nb6oHKN8wJ5C',
-        'callbackURL'       : 'http://192.168.0.101:3333/api/auth/twitter/callback'
+        'callbackURL'       : 'http://192.168.1.113:3333/api/auth/twitter/callback'
     },
 
     'google' : {
