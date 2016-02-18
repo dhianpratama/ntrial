@@ -72,7 +72,8 @@ module.exports = function (passport) {
             },
             function (req, username, password, done) {
                 var query = {
-                    'username': username
+                    'username': username,
+                    'source' : 'local'
                 };
                 User.findOne(query, function (err, user) {
                     if (err) {
