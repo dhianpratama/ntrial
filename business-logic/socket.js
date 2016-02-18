@@ -68,6 +68,11 @@ module.exports.listen = function (app) {
                         otherSocket.join(data._id);
                     //socket.broadcast.to(data._id).emit('message', data);
                     io.sockets.in(data._id).emit('message', data);
+                    var chatNotif = {
+                        from: messageModel.user.username,
+                        message: messageModel.message
+                    }
+                    io.sockets.in(data._id).emit('notification', chatNotif);
                 });
             } else {
                 var query = {
@@ -85,6 +90,11 @@ module.exports.listen = function (app) {
                     chatRoom.save(function (err, data) {
                         //socket.broadcast.to(data._id).emit('message', data);
                         io.sockets.in(data._id).emit('message', data);
+                        var chatNotif = {
+                            from: messageModel.user.username,
+                            message: messageModel.message
+                        }
+                        io.sockets.in(data._id).emit('notification', chatNotif);
                     });
                 });
             }

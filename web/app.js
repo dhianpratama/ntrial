@@ -75,4 +75,10 @@ angular.module('Jiggie-Test').run(function($rootScope, $location, $timeout, Auth
         toastr.info(message);
     })
 
+    socket.on('notification', function (chatNotif) {
+        if(typeof chatNotif != 'undefined' && chatNotif!=null)
+        var message = chatNotif.from + ": \n" + "'" + chatNotif.message + "'";
+        toastr.info(message, "You have new message");
+    })
+
 });
