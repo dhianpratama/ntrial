@@ -1,8 +1,9 @@
 <link href="/web/components/css/chat-widget.css" type="text/css" rel="stylesheet">
 <link href="/web/components/css/codepen-reset.css" type="text/css" rel="stylesheet">
-<div class="container clearfix" ng-controller="ChatCtrl">
+<div class="container clearfix" style="padding-left: 0px;" ng-controller="ChatCtrl">
     <div class="people-list" id="people-list">
         <div class="search">
+            <button class="btn btn-primary" tooltip="New group chat" ng-click="onCreateGroup()"><i class="fa fa-edit"></i></button>
             <input type="text" ng-model="searchText" placeholder="search"/>
             <i class="fa fa-search"></i>
         </div>
@@ -19,18 +20,24 @@
                 </div>
             </li>
 
+            <li class="clearfix" ng-repeat="group in groups | filter: searchText" ng-click="onUserClickGroup(group)" style="cursor: pointer;">
+                <img src="/web/img/default-avatar.jpg" alt="avatar"/>
+                <div class="about">
+                    <div class="name" style="font-weight: bold;">{{ group.groupName }}</div>
+                </div>
+            </li>
 
         </ul>
     </div>
 
-    <div class="chat" ng-if="targetUser">
+    <div class="chat" ng-if="target">
         <div class="chat-header clearfix">
-            <img ng-if="targetUser.photo" ng-src="{{ targetUser.photo }}" alt="avatar"/>
-            <img ng-if="!targetUser.photo" src="/web/img/default-avatar.jpg" alt="avatar"/>
+            <img ng-if="target.photo" ng-src="{{ target.photo }}" alt="avatar"/>
+            <img ng-if="!target.photo" src="/web/img/default-avatar.jpg" alt="avatar"/>
 
             <div class="chat-about">
-                <div class="chat-with">Chat with {{ targetUser.username }}</div>
-                <!--<div class="chat-num-messages">already 1 902 messages</div>-->
+                <div class="chat-with" ng-if="!target.isGroup">Chat with {{ target.username }}</div>
+                <div class="chat-with" ng-if="target.isGroup">{{ target.groupName }}</div>
             </div>
             <i class="fa fa-star"></i>
         </div>

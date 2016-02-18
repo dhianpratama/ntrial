@@ -38,6 +38,7 @@ angular.module('Jiggie-Test').controller('UserCtrl', function ($rootScope, $scop
                     _id: userData._id
                 }, function () {
                     if (json.data.success) {
+                        toastr.success('User successfully deleted.');
                         $scope.Fetch();
                     }
                 });

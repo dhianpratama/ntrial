@@ -81,6 +81,18 @@
                     params: {
                         verb: 'GetChatRoom'
                     }
+                },
+                GetGroups: {
+                    method: 'POST',
+                    params: {
+                        verb: 'GetGroups'
+                    }
+                },
+                GetGroupChatRoom: {
+                    method: 'POST',
+                    params: {
+                        verb: 'GetGroupChatRoom'
+                    }
                 }
             });
         }

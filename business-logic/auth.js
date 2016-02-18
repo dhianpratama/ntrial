@@ -24,7 +24,7 @@ module.exports = function (passport) {
         res.json(jsonWithContext(true))
     });
 
-    router.get('/facebook', passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages'] }));
+    router.get('/facebook', passport.authenticate('facebook', { scope: ['user_friends'] }));
 
     // handle the callback after facebook has authenticated the user
     router.get('/facebook/callback', passport.authenticate('facebook', {

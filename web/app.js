@@ -69,5 +69,10 @@ angular.module('Jiggie-Test').run(function($rootScope, $location, $timeout, Auth
             }, 100);
         }
     };
+    
+    socket.on('group chat created', function (group) {
+        var message = group.creator.username + " invite you to join conversation group '" + group.groupName + "'";
+        toastr.info(message);
+    })
 
 });

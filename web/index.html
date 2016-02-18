@@ -58,6 +58,7 @@
 <script src="/web/app/master/user/user.js"></script>
 <script src="/web/app/master/user/user-form/user-form-controller.js"></script>
 <script src="/web/app/chat/chat-controller.js"></script>
+<script src="/web/app/chat/group/group-controller.js"></script>
 <script src="/web/app/timeline/timeline-controller.js"></script>
 <script src="/web/directive/metis/metis.js"></script>
 <script src="/web/directive/scrollToLast/scroll-to-last.js"></script>
@@ -73,7 +74,7 @@
                             <img ng-if="user.photo" alt="image" class="img-circle" ng-src="{{ user.photo }}"/>
                             <img ng-if="!user.photo" alt="image" class="img-circle" src="/web/img/default-avatar.jpg" />
                              </span>
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <a data-toggle="dropdown" class="dropdown-toggle">
                             <span class="clear"><span class="block m-t-xs">
                             <strong class="font-bold">{{ user.username}}</strong>
                                 <div>{{ user.location }}</div>
@@ -128,7 +129,7 @@
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">
-                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "><i class="fa fa-bars"></i>
                     </a>
 
                     <form role="search" class="navbar-form-custom"

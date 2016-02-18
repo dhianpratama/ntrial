@@ -45,9 +45,13 @@ module.exports.listen = function (app) {
                 socket.join(chatRoom._id);
         });
 
+        socket.on('message group', function(model){
+
+        });
+
         socket.on('message', function (messageModel) {
             var chatRoom = messageModel.chatRoom;
-            if (!chatRoom) {
+            if (!chatRoom && !messageModel.isGroup) {
                 var newChatRoom = new ChatRoom();
                 newChatRoom.members = [messageModel.user, messageModel.targetUser];
                 newChatRoom.messages = [{
@@ -102,6 +106,31 @@ module.exports.listen = function (app) {
             });
         });
 
+        socket.on('create group chat', function (model) {
+            var chatRoom = new ChatRoom();
+            chatRoom.groupName;
+            chatRoom.members = model.members;
+            chatRoom.members.push(model.me);
+            chatRoom.creator = model.me;
+            chatRoom.lastUpdateTime = new Date();
+            chatRoom.isGroup = true;
+            chatRoom.groupName = model.groupName;
+            chatRoom.save(function (err, data) {
+                if (!err) {
+                    socket.join(data._id);
+                    data.members.forEach(function (m, i) {
+                        if (m.id != model.me.id) {
+                            var socketId = userSocketHash[m.id];
+                            var otherSocket = io.sockets.connected[socketId];
+                            if (typeof otherSocket != 'undefined' && otherSocket != null)
+                                otherSocket.join(data._id);
+                        }
+                    });
+                    socket.broadcast.to(data._id).emit('group chat created', data);
+                }
+            });
+        });
+
         socket.on('disconnect', function () {
             console.log('user disconnect');
             var rooms = socket.adapter.rooms;
@@ -127,8 +156,6 @@ module.exports.listen = function (app) {
                     socket.broadcast.emit('user offline', user);
                 })
             });
-
-
         });
     })
 

@@ -36,4 +36,32 @@ router.post('/GetChatRoom', function (req, res) {
     });
 });
 
+router.post('/GetGroupChatRoom', function (req, res) {
+    var user = req.user;
+    var targetGroup = req.body.targetGroup;
+    var query = {
+        '_id': targetGroup._id
+    };
+    ChatRoom.findOne(query, function (err, item) {
+        if(err)
+            throw (err);
+
+        res.json(jsonWithContext(item));
+    });
+});
+
+router.post('/GetGroups', function (req, res) {
+    var user = req.user;
+    var query = {
+        'members.username': user.username,
+        'isGroup': true
+    };
+    ChatRoom.find({$query: query, $orderby: {lastUpdateTime: -1}}, {}, function (err, items) {
+        if(err)
+            throw (err);
+
+        res.json(jsonWithContext(items));
+    });
+});
+
 module.exports = router;
